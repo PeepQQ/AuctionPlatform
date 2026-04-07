@@ -1,0 +1,12 @@
+import { Module } from '@nestjs/common';
+import { LotController } from './lot.controller';
+import { LotService } from './lot.service';
+import { AuthModule } from '../auth/auth.module';
+
+@Module({
+  imports: [AuthModule],
+  controllers: [LotController],
+  providers: [LotService],
+})
+
+export class LotModule {}

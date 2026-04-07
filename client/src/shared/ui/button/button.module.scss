@@ -1,0 +1,59 @@
+@import "../../../app/styles/theme/theme.scss";
+
+.button {
+    font-family: var(--font-secondary);
+    cursor: pointer;
+    background: none;
+    color: var(--color-primary);
+    transition: all 0.3s ease;
+
+    &.fullWidth {
+        width: 100%;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.primary {
+    border: 1px solid var(--color-secondary);
+    border-radius: 4px;
+    font-size: 18px;
+    padding: 10px 20px;
+    background: var(--color-second-bg);
+    color: var(--color-primary);
+
+    &:hover:not(:disabled) {
+        border-color: var(--color-accent);
+        box-shadow: 0 0 10px var(--color-accent);
+        background: var(--color-second-bg);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+}
+
+.secondary {
+    @include bgPrimary;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(80, 110, 160, 0.18);
+
+    &:hover:not(:disabled) {
+        box-shadow: 0 0 10px rgba(80, 110, 160, 0.18);
+        text-shadow: 0 0 5px rgba(244, 248, 255, 0.607);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+
+    &.small {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,45 @@
+
+
+
+
+.header {
+    
+}
+
+.content {
+    padding: 16px 0;
+    display: grid;
+    grid-template-columns: fit-content(100%) 1fr fit-content(100%);
+    align-items: center;
+}
+
+.headerLogo span {
+    font-size: 24px;
+    font-family: var(--font-primary);
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.headerNav {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+}
+
+.headerNavLink {
+    font-size: 20px;
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-primary);
+    transition: 0.3s ease;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--color-accent);
+        text-shadow: 0 0 10px var(--color-accent);
+    }
+}

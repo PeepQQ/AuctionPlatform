@@ -1,0 +1,36 @@
+.inputField {
+  padding: 16px 22px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-second-bg);
+  color: var(--color-primary);
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+
+  &::placeholder {
+    color: var(--color-secondary);
+  }
+
+  &:focus {
+    border-color: var(--color-accent);
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.small {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}
+
+.inputFieldError {
+  border-color: var(--color-error);
+
+  &:focus {
+    border-color: var(--color-error);
+  }
+}

@@ -1,0 +1,1 @@
+export { SignUpContent } from './ui/SignUpContent';

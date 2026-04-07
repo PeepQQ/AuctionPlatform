@@ -1,0 +1,17 @@
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputLabel {
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.errorMessage {
+  color: var(--color-error);
+  font-size: 12px;
+  margin-top: 4px;
+}

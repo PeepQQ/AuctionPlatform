@@ -1,0 +1,35 @@
+
+
+
+.createLotForm {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+    padding-top: 40px;
+}
+
+.headFields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+.createLotFormActions {
+    grid-column: 1/span 2;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pictureField {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.pictureFieldsTitle {
+    text-align: center;
+}

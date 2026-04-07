@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+
+body {
+    background-color: var(--color-page-bg);
+    min-height: 100vh;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: var(--font-primary);
+    outline: none;
+    border: none;
+    text-decoration: none;
+    list-style: 100%;
+    color: var(--color-primary);
+    background: none;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-family: var(--font-secondary);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
