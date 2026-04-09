@@ -3,6 +3,7 @@ import { useCreateLotMutation } from "@shared/api/lot/lot.api";
 import { UseFormHandleSubmit } from "react-hook-form";
 import { CreateLotFormValues } from "../../form/config/config";
 import { CreateLotData } from "@/entities/lot/types/types";
+import { formatData } from "../config/config";
 
 import { links } from "@/shared/config";
 import { useRouter } from "next/navigation";
@@ -17,17 +18,10 @@ export const CreateLotActions = ({ handleSubmit }: CreateLotActionsProps) => {
     const [createLot, { isLoading }] = useCreateLotMutation();
 
     const onSubmit = async (data: CreateLotFormValues) => {
-        const formData = new FormData();
-        formData.append('name', data.name);
-        formData.append('description', data.description);
-        formData.append('startAt', data.startAt.toISOString());
-        formData.append('price', data.price.toString());
-        for (const file of data.pictures ?? []) {
-            formData.append('pictures', file as Blob);
-        }
+        const formattedData = await formatData(data);
         
         try {
-            const res = await createLot(formData as unknown as CreateLotData).unwrap();
+            const res = await createLot(formattedData as unknown as CreateLotData).unwrap();
             router.push(links.lotPage.href(res.id));
         }catch (err) {
             console.log(err);
