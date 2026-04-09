@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Headers, UnauthorizedException, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Headers, UnauthorizedException, NotFoundException, UseInterceptors, Query } from '@nestjs/common';
 import { LotService } from './lot.service';
 import { AuthService } from '../auth/auth.service';
 import type { CreateLotData, MulterFile } from './types/lot.types';
@@ -26,8 +26,23 @@ export class LotController {
     return this.lotService.createLot({ ...body, pictures }, userId);
   }
 
-  @Get('get')
+  @Get('getLots')
   async getLots() {
     return this.lotService.getLots();
+  }
+
+  @Get('getLotById')
+  async getLotById(@Query('lotId') lotId: string) {
+    if (!lotId) {
+      throw new NotFoundException('Не передан lotId')
+    }
+    const lot = await this.lotService.getLotById(lotId);
+    if (!lot) {
+      throw new NotFoundException('Лот не найден')
+    }
+    
+    const pictures = await this.lotService.getLotPictures(lotId);
+
+    return {...lot, pictures};
   }
 }

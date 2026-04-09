@@ -22,7 +22,8 @@ export class LotService {
         name: data.name,
         description: data.description,
         price: Number(data.price),
-        ownerId: userId
+        ownerId: userId,
+        startAt: new Date(data.startAt)
       },
     });
 
@@ -48,5 +49,22 @@ export class LotService {
 
   async getLots() {
     return this.prisma.lot.findMany();
+  }
+
+  async getLotPictures(lotId: string) {
+    return this.prisma.lotPicture.findMany({
+      where: {
+        lotId: Number(lotId)
+      },
+      select: { path: true }
+    })
+  }
+
+  async getLotById(lotId: string) {
+    return this.prisma.lot.findFirst({
+      where: {
+        id: Number(lotId)
+      }
+    })
   }
 }

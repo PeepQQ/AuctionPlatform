@@ -7,32 +7,32 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
-  name            String   @default("Unknown")
-  email           String   @unique
-  passwordHash    String
-  createdAt       DateTime @default(now())
-  refreshToken    String?
-  lots            Lot[]
+  id           Int      @id @default(autoincrement())
+  name         String   @default("Unknown")
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  refreshToken String?
+  lots         Lot[]
 }
 
 model Lot {
-  id              Int      @id @default(autoincrement())
-  name            String
-  description     String
-  price           Float
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  ownerId         Int
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  startAt     DateTime
+  ownerId     Int
   
-  owner           User     @relation(fields: [ownerId], references: [id])
-  pictures        LotPicture[]
+  owner       User         @relation(fields: [ownerId], references: [id])
+  pictures    LotPicture[]
 }
 
 model LotPicture {
-  id              Int      @id @default(autoincrement())
-  lotId           Int
-  path            String
-
-  lot             Lot      @relation(fields: [lotId], references: [id])
+  id    Int    @id @default(autoincrement())
+  lotId Int
+  path  String
+  lot   Lot    @relation(fields: [lotId], references: [id])
 }

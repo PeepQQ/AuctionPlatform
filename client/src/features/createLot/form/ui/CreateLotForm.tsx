@@ -6,13 +6,14 @@ import { CreateLotActions } from "../../actions/ui/CreateLotActions"
 import styles from '../styles/createLotForm.module.scss'
 import { HeadFields } from "./HeadFields"
 import { PictureFields } from "./PictureFields"
+import { useEffect } from "react"
 
 export const CreateLotForm = () => {
     const { 
         register, 
         handleSubmit, 
         setValue, 
-        watch, 
+        watch,
         formState: { errors } 
     } = useForm<CreateLotFormValues>({
         resolver: yupResolver(createLotFormSchema),
@@ -21,6 +22,8 @@ export const CreateLotForm = () => {
         }
     })
 
+    useEffect(() => {console.log(errors)}, [errors])
+
     return (
         <form className={styles.createLotForm}>
             <div className={styles.headFields}>
@@ -28,7 +31,12 @@ export const CreateLotForm = () => {
             </div>
             <div className={styles.pictureField}>
                 <h2 className={styles.pictureFieldsTitle}>Изображения</h2>
-                <PictureFields setValue={setValue} watch={watch} />
+                {errors?.pictures?.message && <p className="errorMessage">{errors?.pictures?.message}</p>}
+                <PictureFields 
+                    register={register} 
+                    setValue={setValue} 
+                    watch={watch}
+                />
             </div>
             <div className={styles.createLotFormActions}>
                 <CreateLotActions 

@@ -1,5 +1,5 @@
 import { CreateLotFormValues } from "../config/config";
-import { UseFormSetValue, UseFormWatch } from "react-hook-form";
+import { UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { FileField } from "@/shared/ui/form";
 import styles from '../styles/pictureFields.module.scss';
 import { UploadedPicture } from './UploadedPicture';
@@ -8,19 +8,21 @@ import { UploadedPicture } from './UploadedPicture';
 export interface PictureFieldsProps {
     setValue: UseFormSetValue<CreateLotFormValues>;
     watch: UseFormWatch<CreateLotFormValues>;
+    register: UseFormRegister<CreateLotFormValues>;
 }
 
-export const PictureFields = ({ setValue, watch }: PictureFieldsProps) => {
+export const PictureFields = ({ setValue, watch, register }: PictureFieldsProps) => {
     const pictures = Array.from(watch('pictures') || []) as File[];
 
     const onDeletePicture = (pictureIndex: number) => {
-        setValue('pictures', watch('pictures')?.filter((pic, i) => i !== pictureIndex));
+        setValue('pictures', watch('pictures')?.filter((_, i) => i !== pictureIndex));
     }
 
     return (
         <div className={styles.picturesField}>
             {pictures?.length < 3 && (
                 <FileField
+                    {...register("pictures")}
                     dropzoneClassName={styles.dropzone}
                     onChange={(e) => {
                         const files = e.target.files;
