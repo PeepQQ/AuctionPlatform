@@ -1,3 +1,3 @@
 export { LotPageLayout } from "./LotPageLayout";
-export { LotPagePictures } from "./LotPagePictures";
+export { LotPagePictures } from "./lotPagePictures/LotPagePictures";
 export { LotPageSidePanel } from "./LotPageSidePanel";

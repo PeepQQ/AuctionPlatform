@@ -10,6 +10,11 @@ export interface Lot {
     createdAt: Date;
     updatedAt: Date;
     startAt: Date;
+    pictures: LotPicture[]
+}
+
+export type LotPicture = {
+    path: string;
 }
 
 export interface CreateLotData {
