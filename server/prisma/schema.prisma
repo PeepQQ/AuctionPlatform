@@ -13,7 +13,9 @@ model User {
   passwordHash String
   createdAt    DateTime @default(now())
   refreshToken String?
+
   lots         Lot[]
+  bets         LotBet[]
 }
 
 model Lot {
@@ -25,9 +27,10 @@ model Lot {
   updatedAt   DateTime     @updatedAt
   startAt     DateTime
   ownerId     Int
-  
+
   owner       User         @relation(fields: [ownerId], references: [id])
   pictures    LotPicture[]
+  bets        LotBet[]
 }
 
 model LotPicture {
@@ -35,4 +38,16 @@ model LotPicture {
   lotId Int
   path  String
   lot   Lot    @relation(fields: [lotId], references: [id])
+}
+
+model LotBet {
+  id       Int    @id @default(autoincrement())
+  summ     Int
+  date     DateTime     @default(now())
+  lotId    Int
+  userId   Int
+  username String
+
+  lot      Lot    @relation(fields: [lotId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
 }

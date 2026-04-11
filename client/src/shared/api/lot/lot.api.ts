@@ -12,8 +12,14 @@ export const lotApi = api.injectEndpoints({
                 method: 'POST',
                 body: data
             })
+        }),
+        getLot: builder.query<Lot, {}>({
+            query: (lotId: string) => `/lots/getLotById?lotId=${lotId}`
         })
     })
 })
 
-export const { useCreateLotMutation } = lotApi;
+export const { 
+    useCreateLotMutation,
+    useGetLotQuery
+} = lotApi;

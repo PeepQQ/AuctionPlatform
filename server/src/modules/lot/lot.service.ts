@@ -51,19 +51,19 @@ export class LotService {
     return this.prisma.lot.findMany();
   }
 
-  async getLotPictures(lotId: string) {
+  async getLotPictures(lotId: number) {
     return this.prisma.lotPicture.findMany({
       where: {
-        lotId: Number(lotId)
+        lotId: lotId
       },
       select: { path: true }
     })
   }
 
-  async getLotById(lotId: string) {
+  async getLotById(lotId: number) {
     return this.prisma.lot.findFirst({
       where: {
-        id: Number(lotId)
+        id: lotId
       }
     })
   }

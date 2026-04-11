@@ -1,0 +1,18 @@
+
+
+
+.betsListTh {
+    padding: 8px;
+    background-color: var(--color-second-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.betsListTd {
+    padding: 8px;
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child {
+        text-align: center;
+    }
+}

@@ -36,12 +36,12 @@ export class LotController {
     if (!lotId) {
       throw new NotFoundException('Не передан lotId')
     }
-    const lot = await this.lotService.getLotById(lotId);
+    const lot = await this.lotService.getLotById(Number(lotId));
     if (!lot) {
       throw new NotFoundException('Лот не найден')
     }
     
-    const pictures = await this.lotService.getLotPictures(lotId);
+    const pictures = await this.lotService.getLotPictures(Number(lotId));
 
     return {...lot, pictures};
   }

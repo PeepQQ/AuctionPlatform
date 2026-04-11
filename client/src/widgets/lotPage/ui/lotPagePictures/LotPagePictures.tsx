@@ -29,11 +29,13 @@ export const LotPagePictures = ({
                     fill
                 />
             </div>
-            <AllPicturesList 
-                pictures={pictures}
-                onSelectActive={onSelectActive}
-                activePic={activePic}
-            />
+            <div className={styles.allPicturesList}>
+                <AllPicturesList 
+                    pictures={pictures}
+                    onSelectActive={onSelectActive}
+                    activePic={activePic}
+                />
+            </div>
         </div>
     )
 }

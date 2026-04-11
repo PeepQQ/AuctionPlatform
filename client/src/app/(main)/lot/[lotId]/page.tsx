@@ -1,4 +1,4 @@
-import { LotPageLayout, LotPagePictures, LotPageSidePanel } from "@/widgets/lotPage";
+import { LotPageLayout, LotPagePictures, LotPageSidePanel, LotPageContent } from "@/widgets/lotPage";
 import { apiBaseUrl } from "@/shared/config";
 import type { Lot } from "@/entities/lot";
 
@@ -20,9 +20,9 @@ export default async function LotPage({ params }: {
                     pictures={lot.pictures}
                 />
             }
-            sidePanel={<LotPageSidePanel />}
+            sidePanel={<LotPageSidePanel lot={lot} />}
         >
-            content
+            <LotPageContent lotId={lot.id}/>
         </LotPageLayout>
     )
 }

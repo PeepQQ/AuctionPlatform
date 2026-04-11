@@ -4,7 +4,7 @@ import { getCookieWithExpirationCheck } from "@shared/lib/hooks";
 
 export const api = createApi({
     reducerPath: 'api',
-    tagTypes: ['user'],
+    tagTypes: ['user', 'lot', 'bet'],
     baseQuery: fetchBaseQuery({
         baseUrl: "/api/",
         prepareHeaders: (headers) => {
