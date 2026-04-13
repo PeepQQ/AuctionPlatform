@@ -8,7 +8,7 @@ import { LotGateway } from './lot.gateway';
   imports: [AuthModule],
   controllers: [LotController],
   providers: [LotService, LotGateway],
-  exports: [LotGateway]
+  exports: [LotGateway, LotService]
 })
 
 export class LotModule {}

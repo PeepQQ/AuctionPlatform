@@ -1,31 +1,37 @@
 'use client'
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import { socket } from "@/shared/lib/hooks";
 
 
 export interface LotPriceProps {
-    lotId: string;
+    lotId: number;
     className: string;
+    lotPrice: number;
 }
 
 export const LotPrice = ({
     lotId,
-    className
+    className,
+    lotPrice
 }: LotPriceProps) => {
+    const [currentLotPrice, setCurrentLotPice] = useState(lotPrice);
 
-    // useEffect(() => {
-    //     socket.emit('joinLot', lotId);
-      
-    //     socket.on('lotPrice', (price) => {
-    //       console.log('New price:', price);
-    //     });
-      
-    //     return () => {
-    //       socket.off('lotPrice');
-    //     };
-    // }, [lotId]);
+    useEffect(() => {
+        socket.emit('joinLot', lotId);
+
+        const handler = (data: { lotId: number; price: number }) => {
+            if (Number(data.lotId) !== lotId) return;
+            setCurrentLotPice(data.price);
+        };
+
+        socket.on('lotPrice', handler);
+
+        return () => {
+            socket.off('lotPrice', handler);
+        };
+    }, [lotId]);
 
     return (
-        <></>
+        <span className={className}>{currentLotPrice} $</span>
     )
 }

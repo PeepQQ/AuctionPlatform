@@ -15,3 +15,14 @@ export interface Bet {
     username: string;
     date: string;
 }
+
+export interface GetBetsData {
+    lotId: number;
+    page: number;
+    pageSize: number;
+}
+
+export interface BetsResData {
+    bets: Bet[];
+    totalCount: number;
+}

@@ -13,3 +13,9 @@ export interface Bet {
   summ: number;
   date: Date;
 }
+
+export interface GetBetsData {
+  lotId: number;
+  pageSize: number;
+  page: number;
+}

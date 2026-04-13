@@ -1,11 +1,23 @@
-
-
-
-
 .lotPageSidePanel {
-    background-color: var(--color-second-bg);
+    background: var(--box-bg);
+    backdrop-filter: var(--box-backgrop-filter);
+    box-shadow: var(--box-box-shadow);
+
     padding: 16px;
     border-radius: 16px;
     height: 100%;
-    border: 1px var(--color-border) solid;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.lotPriceWrapper {
+    display: flex;
+    gap: 8px;
+}
+
+.lotHeadInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }

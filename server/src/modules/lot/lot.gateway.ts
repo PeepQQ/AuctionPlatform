@@ -40,14 +40,15 @@ import {
         client.leave(lotId);
     }
   
-    sendLotPrice(lotId: string, price: number) {
-        this.server.to(lotId).emit('lotPrice', price);
+    lotPrice(lotId: string, price: number) {
+        this.server.to(lotId).emit('lotPrice', {lotId, price});
     }
 
-    lotBets(lotId: string, bets: Bet[]) {
-        this.server.to(lotId).emit('lotBets', {
+    newBet(lotId: string, bet: Bet, totalCount: number) {
+        this.server.to(lotId).emit('newBet', {
           lotId,
-          bets
+          bet,
+          totalCount
         });
     }
   }

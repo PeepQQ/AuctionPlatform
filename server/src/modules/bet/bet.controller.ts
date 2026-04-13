@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Headers, UnauthorizedException, Get, Query } from "@nestjs/common";
 import { BetService } from "./bet.service";
-import type { MakeBetData } from "./types/bet.types";
+import type { MakeBetData, GetBetsData } from "./types/bet.types";
 import { AuthService } from "../auth/auth.service";
 
 
@@ -20,9 +20,9 @@ export class BetController {
     ) {
         const { id: userId, name: username } = await this.authService.me(headers);
         if (!userId) {
-        throw new UnauthorizedException('User not found');
+            throw new UnauthorizedException('User not found');
         }
-        this.betService.makeBet({
+        return this.betService.makeBet({
             lotId: data.lotId, 
             userId, 
             username,
@@ -30,8 +30,10 @@ export class BetController {
         });
     }
 
-    @Get('getBetsByLotId')
-    async getBetsByLotId(@Query('lotId') lotId: string) {
-        return this.betService.getBets(Number(lotId));
+    @Post('getLotBets')
+    async getLotBets(
+        @Body() data: GetBetsData
+    ) {
+        return this.betService.getBets(data);
     }
 }

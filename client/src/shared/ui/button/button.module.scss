@@ -1,4 +1,4 @@
-@import "../../../app/styles/theme/theme.scss";
+
 
 .button {
     font-family: var(--font-secondary);
@@ -37,7 +37,10 @@
 }
 
 .secondary {
-    @include bgPrimary;
+    background: var(--box-bg);
+    backdrop-filter: var(--box-backgrop-filter);
+    box-shadow: var(--box-box-shadow);
+    
     padding: 12px 18px;
     font-size: 16px;
     border-radius: 10px;

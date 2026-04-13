@@ -1,28 +1,26 @@
 import type { betsListTHeadItem } from "../config/config";
 import type { Bet } from "@/entities/bet";
-
+import { Td } from "@/shared/ui/table";
 
 
 interface RenderTableTdProps {
     item: betsListTHeadItem;
     bet: Bet;
-    className: string;
 }
 
 export const renderTableTd = ({
     item,
-    bet,
-    className
+    bet
 }: RenderTableTdProps) => {
 
 
     return (
-        <td key={item.id} className={className}>
+        <Td key={item.id}>
             {
                 item?.parseFn ? 
                     item.parseFn(bet[item.dataKey].toString())
                     : bet[item.dataKey]
             }
-        </td>
+        </Td>
     )
 }

@@ -1,4 +1,5 @@
-import type { Bet } from "@/entities/bet"
+import type { Bet, GetBetsData, BetsResData } from "@/entities/bet";
+import axios from "axios";
 
 export interface betsListTHeadItem {
     id: number;
@@ -33,11 +34,16 @@ export const betsListTHead: betsListTHeadItem[] = [
     }
 ]
 
-export const fetchBets = async (
-    lotId: number, 
-    onSuccess: (data: Bet[]) => void
-) => {
-    const res = await fetch(`/api/bet/getBetsByLotId?lotId=${lotId}`);
-    const data = await res.json();
-    onSuccess(data);
+export const fetchBets = async ({
+    lotId,
+    page,
+    pageSize,
+    onSuccess
+}: GetBetsData & {onSuccess: (data: BetsResData) => void}) => {
+    const res = await axios.post("/api/bet/getLotBets", {
+        lotId,
+        page,
+        pageSize
+    })
+    onSuccess(res.data as BetsResData);
 };

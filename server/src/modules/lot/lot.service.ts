@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service.js';
 import type { CreateLotData } from './types/lot.types.js';
 import { AuthService } from '../auth/auth.service.js';
 import { ImageKit, toFile } from '@imagekit/nodejs';
+import { LotGateway } from './lot.gateway.js';
 
 
 @Injectable()
 export class LotService {
   constructor(
     private readonly prisma: PrismaService, 
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly lotGateway: LotGateway
   ) {}
 
   async createLot(data: CreateLotData, userId: number) {
@@ -66,5 +68,16 @@ export class LotService {
         id: lotId
       }
     })
+  }
+
+  async changeLotPrice(lotId: number, price: number) {
+    await this.prisma.lot.update({
+      where: {
+        id: lotId
+      },
+      data: { price }
+    })
+
+    this.lotGateway.lotPrice(lotId.toString(), price);
   }
 }

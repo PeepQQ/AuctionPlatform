@@ -1,0 +1,56 @@
+.modalWrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.5s;
+}
+
+.modalOpen {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal {
+    background: var(--box-bg);
+    backdrop-filter: var(--box-backgrop-filter);
+    box-shadow: var(--box-box-shadow);
+    padding: 40px 20px;
+    border-radius: 16px;
+    max-width: 90vw;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+}
+
+.modalClose {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    cursor: pointer;
+}
+
+.modalHead {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.modalHeadTitle {
+    font-size: 32px;
+    text-align: center;
+}
+
+.modalHeadDescription {
+    text-align: center;
+}
