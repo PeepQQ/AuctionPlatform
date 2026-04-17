@@ -1,7 +1,10 @@
-import { Controller, Post, Body, Headers, UnauthorizedException, Get, Query } from "@nestjs/common";
+import { Controller, Post, Body, Headers, UnauthorizedException, Get, Query, UseGuards } from "@nestjs/common";
 import { BetService } from "./bet.service";
 import type { MakeBetData, GetBetsData } from "./types/bet.types";
 import { AuthService } from "../auth/auth.service";
+import type { UserPayload } from "src/helpers/helpers";
+import { User } from "../auth/user.decorator";
+import { AuthGuard } from "../auth/auth.guard";
 
 
 
@@ -13,19 +16,20 @@ export class BetController {
         private readonly betService: BetService
     ) {}
 
+    @UseGuards(AuthGuard)
     @Post('makeBet')
     async makeBet(
         @Body() data: MakeBetData,
-        @Headers() headers: Headers,
+        @User() user: UserPayload,
     ) {
-        const { id: userId, name: username } = await this.authService.me(headers);
+        const userId = user.id;
         if (!userId) {
             throw new UnauthorizedException('User not found');
         }
         return this.betService.makeBet({
             lotId: data.lotId, 
-            userId, 
-            username,
+            userId: 1, 
+            username: user.name,
             summ: data.summ,
         });
     }
@@ -35,5 +39,15 @@ export class BetController {
         @Body() data: GetBetsData
     ) {
         return this.betService.getBets(data);
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('canMakeBet')
+    async canMakeBet(
+        @Body() data: {lotId: number},
+        @User() user: UserPayload,
+    ) {
+        const userId = user.id;
+        return this.betService.canMakeBet(data.lotId, 1);
     }
 }

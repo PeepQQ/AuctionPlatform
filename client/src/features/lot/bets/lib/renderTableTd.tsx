@@ -1,10 +1,10 @@
-import type { betsListTHeadItem } from "../config/config";
+import type { betsTableCol } from "../config/config";
 import type { Bet } from "@/entities/bet";
 import { Td } from "@/shared/ui/table";
 
 
 interface RenderTableTdProps {
-    item: betsListTHeadItem;
+    item: betsTableCol;
     bet: Bet;
 }
 

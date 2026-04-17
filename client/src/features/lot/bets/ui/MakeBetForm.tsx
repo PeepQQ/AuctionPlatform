@@ -1,10 +1,9 @@
 'use client';
 import styles from "../styles/makeBet.module.scss";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMakeBetMutation } from "@/shared/api/bet/bet.api";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/form/input";
-
 
 interface MakeBetFormProps {
     lotId: number;
@@ -17,7 +16,7 @@ export const MakeBetForm = ({
 }: MakeBetFormProps) => {
     const [betSumm, setBetSumm] = useState(0);
     const [makeBet, { isLoading, error }] = useMakeBetMutation();
-
+    
     const handleMakeBet = async () => {
         try {
             await makeBet({

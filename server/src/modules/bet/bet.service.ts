@@ -1,8 +1,9 @@
-import { Injectable, BadRequestException } from "@nestjs/common";
+import { Injectable, BadRequestException, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LotGateway } from "../lot/lot.gateway";
 import type { GetBetsData, MakeBetData } from "./types/bet.types";
 import { LotService } from "../lot/lot.service";
+import { LotState } from "@prisma/client";
 
 
 @Injectable()
@@ -19,14 +20,8 @@ export class BetService {
     username,
     summ
   }: MakeBetData) {
-    const lot = await this.prisma.lot.findUnique({
-      where: {
-        id: lotId
-      }
-    })
-    if (!lot) {
-      throw new BadRequestException('Лот не найден');
-    }
+    const lot = await this.canMakeBet(lotId, userId);
+
     const minBetSumm = lot?.price;
     if(summ < minBetSumm) {
       throw new BadRequestException(`Ставка должна быть больше ${minBetSumm} $`);
@@ -66,5 +61,37 @@ export class BetService {
       bets,
       totalCount
     }
+  }
+
+  async canMakeBet(lotId: number, userId: number) {
+    if(!userId) {
+      throw new UnauthorizedException('Пользователь не авторизован');
+    }
+
+    const lot = await this.lotService.getLotById(lotId);
+    if(!lot) {
+      throw new BadRequestException('Лот не найден');
+    }
+
+    if(lot.state !== LotState.TRADING) {
+      throw new BadRequestException('Совершить ставку возможно только при статусе лота [Идет торг]');
+    }
+
+    const lastBet = await this.getLastBet(lotId);
+
+    if(lastBet?.userId === userId) {
+      throw new BadRequestException('Вы уже совершали ставку на данный лот и она является последней, дождитесь пока её кто-нибудь перебьет.');
+    }
+
+    return lot;
+  }
+
+  async getLastBet(lotId: number) {
+    return await this.prisma.lotBet.findFirst({
+      where: {lotId},
+      orderBy: {
+        date: 'desc',
+      },
+    })
   }
 }

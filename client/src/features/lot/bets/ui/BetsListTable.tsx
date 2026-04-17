@@ -1,7 +1,7 @@
 'use client'
-import { socket } from "@/shared/lib/hooks";
+import { useLotSocket } from "@/shared/lib/hooks";
 import { useEffect, useState, useRef } from "react";
-import { betsListTHead, fetchBets } from "../config/config";
+import { betsTableCols, fetchBets } from "../config/config";
 import type { Bet, BetsResData } from "@/entities/bet";
 import { renderTableTd } from "../lib/renderTableTd";
 import {
@@ -15,6 +15,7 @@ import {
 
 
 export const BetsListTable = ({ lotId }: { lotId: number }) => {
+    const { onBet } = useLotSocket(lotId);
     const [isNewBet, setIsNewBet] = useState(false);
     const [paginateData, setPaginateData] = useState({
         lotId: lotId,
@@ -45,9 +46,7 @@ export const BetsListTable = ({ lotId }: { lotId: number }) => {
         if (page === 1) setIsNewBet(false);
     }
 
-    const newBetHandler = ({ lotId: incomingLotId, bet, totalCount }: { lotId: number, bet: Bet, totalCount: number }) => {
-        if (incomingLotId != lotId) return;
-
+    const newBetHandler = ({ bet, totalCount }: { bet: Bet, totalCount: number }) => {
         const { page, pageSize } = paginateRef.current;        
         
         if (page == 1) {
@@ -69,13 +68,9 @@ export const BetsListTable = ({ lotId }: { lotId: number }) => {
 
     useEffect(() => {
         updatePage(1);
-        const roomId = lotId.toString();
-        socket.emit('joinLot', roomId);
-        socket.on('newBet', newBetHandler);
-        return () => {
-            socket.emit('leaveLot', roomId);
-            socket.off('newBet', newBetHandler);
-        };
+        const unsubscribe = onBet(newBetHandler);
+
+        return unsubscribe;
     }, [lotId]);
 
     return (
@@ -84,7 +79,7 @@ export const BetsListTable = ({ lotId }: { lotId: number }) => {
             <Table>
                 <THead>
                     <Tr>
-                        {betsListTHead.map(item =>
+                        {betsTableCols.map(item =>
                             <Th key={item.id}>
                                 {item.text}
                             </Th>
@@ -94,7 +89,7 @@ export const BetsListTable = ({ lotId }: { lotId: number }) => {
                 <TBody>
                     {bets.map(bet =>
                         <Tr key={bet.id}>
-                            {betsListTHead.map(item =>
+                            {betsTableCols.map(item =>
                                 renderTableTd({ item, bet })
                             )}
                         </Tr>

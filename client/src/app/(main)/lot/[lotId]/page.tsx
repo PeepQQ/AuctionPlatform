@@ -1,6 +1,7 @@
 import { LotPageLayout, LotPagePictures, LotPageSidePanel, LotPageContent } from "@/widgets/lotPage";
 import { apiBaseUrl } from "@/shared/config";
 import type { Lot } from "@/entities/lot";
+import { LotSocketProvider } from "@/shared/lib";
 
 export default async function LotPage({ params }: {
     params: Promise<{[key: string]: string | undefined}>
@@ -14,15 +15,17 @@ export default async function LotPage({ params }: {
     }
 
     return (
-        <LotPageLayout
-            pictures={
-                <LotPagePictures 
-                    pictures={lot.pictures}
-                />
-            }
-            sidePanel={<LotPageSidePanel lot={lot} />}
-        >
-            <LotPageContent lotId={lot.id}/>
-        </LotPageLayout>
+       <LotSocketProvider lotId={lot.id}>
+            <LotPageLayout
+                pictures={
+                    <LotPagePictures 
+                        pictures={lot.pictures}
+                    />
+                }
+                sidePanel={<LotPageSidePanel lot={lot} />}
+            >
+                <LotPageContent lotId={lot.id}/>
+            </LotPageLayout>
+       </LotSocketProvider>
     )
 }

@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
-import { socket } from "@/shared/lib/hooks";
+import { useLotSocket } from "@/shared/lib/hooks";
 
 
 export interface LotPriceProps {
@@ -15,20 +15,14 @@ export const LotPrice = ({
     lotPrice
 }: LotPriceProps) => {
     const [currentLotPrice, setCurrentLotPice] = useState(lotPrice);
+    const { onPrice } = useLotSocket(lotId);
 
     useEffect(() => {
-        socket.emit('joinLot', lotId);
+        const unsubscribe = onPrice(({price}) => {
+            setCurrentLotPice(price);
+        })
 
-        const handler = (data: { lotId: number; price: number }) => {
-            if (Number(data.lotId) !== lotId) return;
-            setCurrentLotPice(data.price);
-        };
-
-        socket.on('lotPrice', handler);
-
-        return () => {
-            socket.off('lotPrice', handler);
-        };
+        return unsubscribe;
     }, [lotId]);
 
     return (

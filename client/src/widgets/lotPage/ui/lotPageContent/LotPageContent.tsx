@@ -1,5 +1,5 @@
 import styles from "../../styles/lotPageContent.module.scss";
-import { BetsListTable } from "@/features/lotPage/bets/ui/BetsListTable";
+import { BetsListTable } from "@/features/lot/bets/ui/BetsListTable";
 
 
 

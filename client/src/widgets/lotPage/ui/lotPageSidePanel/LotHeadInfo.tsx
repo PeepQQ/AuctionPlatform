@@ -1,6 +1,6 @@
 import styles from "../../styles/lotPageSidePanel.module.scss"
 import type { Lot } from "@/entities/lot"
-import { LotPrice } from "@/features/lotPage"
+import { LotPrice } from "@/features/lot"
 
 
 

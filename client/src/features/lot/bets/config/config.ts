@@ -1,7 +1,7 @@
 import type { Bet, GetBetsData, BetsResData } from "@/entities/bet";
 import axios from "axios";
 
-export interface betsListTHeadItem {
+export interface betsTableCol {
     id: number;
     text: string;
     dataKey: keyof Bet;
@@ -9,7 +9,7 @@ export interface betsListTHeadItem {
 }
 
 
-export const betsListTHead: betsListTHeadItem[] = [
+export const betsTableCols: betsTableCol[] = [
     {
         id: 1,
         text: 'Id ставки',

@@ -28,14 +28,16 @@ export const LotPagePictures = ({
                     alt={'Изображение лота'}
                     fill
                 />
-            </div>
-            <div className={styles.allPicturesList}>
-                <AllPicturesList 
-                    pictures={pictures}
-                    onSelectActive={onSelectActive}
-                    activePic={activePic}
-                />
-            </div>
+            </div>  
+            {pictures.length > 1 && 
+                <div className={styles.allPicturesList}>
+                    <AllPicturesList 
+                        pictures={pictures}
+                        onSelectActive={onSelectActive}
+                        activePic={activePic}
+                    />
+                </div>
+            }
         </div>
     )
 }

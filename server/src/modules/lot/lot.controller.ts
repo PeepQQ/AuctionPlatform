@@ -1,9 +1,13 @@
-import { Controller, Get, Post, Body, Headers, UnauthorizedException, NotFoundException, UseInterceptors, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Headers, UnauthorizedException, NotFoundException, UseInterceptors, Query, UseGuards } from '@nestjs/common';
 import { LotService } from './lot.service';
 import { AuthService } from '../auth/auth.service';
 import type { CreateLotData, MulterFile } from './types/lot.types';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadedFiles } from '@nestjs/common';
+import { LotState } from '@prisma/client';
+import { User } from '../auth/user.decorator';
+import type { UserPayload } from 'src/helpers/helpers';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('lots')
 export class LotController {
@@ -12,14 +16,15 @@ export class LotController {
     private readonly authService: AuthService
   ) {}
 
+  @UseGuards(AuthGuard)
   @UseInterceptors(FilesInterceptor('pictures', 10))
   @Post('create')
   async createLot(
     @UploadedFiles() pictures: MulterFile[],
     @Body() body: CreateLotData,
-    @Headers() headers: Headers,
+    @User() user: UserPayload,
   ) {
-    const { id: userId } = await this.authService.me(headers);
+    const userId = user.id;
     if (!userId) {
       throw new UnauthorizedException('User not found');
     }
@@ -44,5 +49,10 @@ export class LotController {
     const pictures = await this.lotService.getLotPictures(Number(lotId));
 
     return {...lot, pictures};
+  }
+
+  @Post('changeLotState')
+  async changeLotState(@Body() body: {lotId:number, state:LotState}) {
+    return this.lotService.changeLotState(body.lotId, body.state);
   }
 }

@@ -1,15 +1,11 @@
 import { api } from "../api"
 import type { SignInData, SignUpData } from "@/entities/user";
-import { setCookieMinutes, deleteCookie, setCookie } from "@shared/lib/hooks";
-
-export const logout = () => {
-    deleteCookie('accessToken');
-    deleteCookie('refreshToken');
-};
+import type { User } from "@/entities/user";
+import Cookies from "js-cookie";
 
 export const userApi = api.injectEndpoints({
     endpoints: builder => ({
-        getUser: builder.query({
+        getUser: builder.query<User, void>({
             query: () => "/auth/me",
             providesTags: ['user'],
         }),
@@ -18,12 +14,7 @@ export const userApi = api.injectEndpoints({
                 url: "/auth/refresh",
                 method: "POST"
             }),
-            transformResponse: (response: { accessToken: string; refreshToken: string }) => {
-                setCookieMinutes('accessToken', response.accessToken, 15);
-                setCookie('refreshToken', response.refreshToken, 15);
-                return response;
-            },
-            invalidatesTags: ['user']
+            invalidatesTags: ['user'],
         }),
         signIn: builder.mutation({
             query: (data: SignInData) => ({
@@ -31,11 +22,6 @@ export const userApi = api.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            transformResponse: (response: { accessToken: string; refreshToken: string}) => {
-                setCookieMinutes('accessToken', response.accessToken, 15);
-                setCookie('refreshToken', response.refreshToken, 15);
-                return response;
-            },
             invalidatesTags: ['user'],
         }),
         signUp: builder.mutation({
@@ -44,13 +30,15 @@ export const userApi = api.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            transformResponse: (response: { accessToken: string; refreshToken: string; user: any }) => {
-                setCookieMinutes('accessToken', response.accessToken, 15);
-                setCookie('refreshToken', response.refreshToken, 15);
-                return response;
-            },
             invalidatesTags: ['user'],
         }),
+        logout: builder.mutation({
+            query: () => ({
+                url: "/auth/logout",
+                method: "POST"
+            }),
+            invalidatesTags: ['user'],
+        })
     })
 })
 
@@ -59,5 +47,6 @@ export const {
     useGetUserQuery, 
     useRefreshTokenMutation, 
     useSignInMutation, 
-    useSignUpMutation 
+    useSignUpMutation,
+    useLogoutMutation
 } = userApi;

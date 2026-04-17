@@ -15,7 +15,6 @@ export const LotPageLayout = ({
 
 
 
-
     return (
         <div className={`${styles.lotPageLayout} container`}>
             <div className={styles.lotPageHead}>

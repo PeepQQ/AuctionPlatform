@@ -1,25 +1,12 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { getCookieWithExpirationCheck } from "@shared/lib/hooks";
 
 export const api = createApi({
     reducerPath: 'api',
     tagTypes: ['user', 'lot', 'bet'],
     baseQuery: fetchBaseQuery({
         baseUrl: "/api/",
-        prepareHeaders: (headers) => {
-            const accessToken = getCookieWithExpirationCheck('accessToken');
-            if (accessToken) {
-                headers.set('accesstoken', accessToken);
-            }
-            
-            const refreshToken = getCookieWithExpirationCheck('refreshToken');
-            if (refreshToken) {
-                headers.set('refreshtoken', refreshToken);
-            }
-            
-            return headers;
-        },
+        credentials: 'include'
     }),
     endpoints: builder => ({
         test: builder.query({

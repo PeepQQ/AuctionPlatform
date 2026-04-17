@@ -1,16 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service.js';
 import type { CreateLotData } from './types/lot.types.js';
-import { AuthService } from '../auth/auth.service.js';
 import { ImageKit, toFile } from '@imagekit/nodejs';
 import { LotGateway } from './lot.gateway.js';
+import { LotState } from '@prisma/client';
 
 
 @Injectable()
 export class LotService {
   constructor(
     private readonly prisma: PrismaService, 
-    private readonly authService: AuthService,
     private readonly lotGateway: LotGateway
   ) {}
 
@@ -63,11 +62,28 @@ export class LotService {
   }
 
   async getLotById(lotId: number) {
-    return this.prisma.lot.findFirst({
+    let lot = await this.prisma.lot.findFirst({
       where: {
         id: lotId
       }
     })
+
+    if(lot?.state == LotState.WAITING && new Date(lot.startAt) < new Date()) {
+      lot = await this.changeLotState(lotId, LotState.TRADING);
+    }
+
+    return lot;
+  }
+
+  async changeLotState(lotId: number, state: LotState) {
+    const lot = await this.prisma.lot.update({
+      where: {id: lotId},
+      data: { state }
+    })
+
+    this.lotGateway.lotState(lotId.toString(), state);
+
+    return lot;
   }
 
   async changeLotPrice(lotId: number, price: number) {

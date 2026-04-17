@@ -1,4 +1,4 @@
-
+import type { LotState } from "@prisma/client";
 
 export interface MulterFile {
   fieldname: string;

@@ -1,16 +1,17 @@
 import { User } from "@prisma/client";
 import * as jwt from 'jsonwebtoken';
 import type { JwtPayload } from "jsonwebtoken";
+import { ClientUser } from "src/modules/user/types/user.types";
 
-export interface AppAccessPayload extends JwtPayload {
+export interface UserPayload extends JwtPayload {
     id: number;
-    email: string;
+    name: string;
     exp: number;
-  }
+}
 
 export function formatUser(user: User) {
     const { passwordHash, refreshToken, ...formattedUser } = user;
-    return formattedUser;
+    return formattedUser as ClientUser;
 }
 
 function getJwtSecret(): string {
@@ -21,14 +22,14 @@ function getJwtSecret(): string {
     return secret;
 }
 
-export function getVerifyToken (id: number, email: string) {
-    return jwt.sign({ id, email }, getJwtSecret(), { expiresIn: '15m' });
+export function getVerifyToken (id: number, name: string) {
+    return jwt.sign({ id, name }, getJwtSecret(), { expiresIn: '15m' });
 }
 
-export function getRefreshToken (id: number, email: string) {
-    return jwt.sign({ id, email }, getJwtSecret(), { expiresIn: '15d' });
+export function getRefreshToken (id: number, name: string) {
+    return jwt.sign({ id, name }, getJwtSecret(), { expiresIn: '15d' });
 }
 
 export function verifyToken(token: string) {
-    return jwt.verify(token, getJwtSecret()) as AppAccessPayload;
+    return jwt.verify(token, getJwtSecret()) as UserPayload;
 }

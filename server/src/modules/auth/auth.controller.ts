@@ -1,33 +1,54 @@
 import { AuthService } from "./auth.service";
-import { Body, Controller, Post, Get, Headers } from "@nestjs/common";
+import type { Response } from "express";
+import { Body, Controller, Post, Get, Res, UseGuards } from "@nestjs/common";
 import type { SignInData, SignUpData } from "./types/auth.types";
-
+import { getVerifyToken, type UserPayload } from "src/helpers/helpers";
+import { User } from "./user.decorator";
+import { AuthGuard } from "./auth.guard";
 
 
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(
+        private readonly authService: AuthService,
+    ) {}
 
     @Post('signUp')
-    async signUp(@Body() body: SignUpData) {
-        const data = await this.authService.signUp(body);
-        return data;
+    async signUp(
+        @Body() body: SignUpData,
+        @Res({ passthrough: true }) res: Response
+    ) {
+        const user = await this.authService.signUp(body);
+        const accessToken = getVerifyToken(user.id, user.name);
+        const refreshToken = await this.authService.updateRefreshToken(user);
+        await this.authService.setCookieTokens(accessToken, refreshToken, res);
+        return { user };
     }
 
     @Post('signIn')
-    async signIn(@Body() body: SignInData) {
-        const data = await this.authService.signIn(body);
-        return data;
+    async signIn(
+        @Body() body: SignInData,
+        @Res({ passthrough: true }) res: Response
+    ) {
+        const user = await this.authService.signIn(body);
+        const accessToken = getVerifyToken(user.id, user.name);
+        const refreshToken = await this.authService.updateRefreshToken(user);
+        await this.authService.setCookieTokens(accessToken, refreshToken, res);
+        return { user };
     }
 
+    @UseGuards(AuthGuard)
     @Get('me')
-    async me(@Headers() headers: Headers) {
-        return this.authService.me(headers);
+    async me(
+        @User() user: UserPayload
+    ) {
+        return this.authService.me(user.id);
     }
 
-    @Post('refresh')
-    async refresh(@Headers() headers: Headers) {
-        return this.authService.refresh(headers);
+    @Post('logout')
+    async logout(@Res({ passthrough: true }) res: Response) {
+        this.authService.logout(res);
+        return { message: "ok" };
     }
 }

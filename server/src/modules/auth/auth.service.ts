@@ -1,8 +1,10 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
+import type { Response } from 'express';
 import { PrismaService } from "src/prisma/prisma.service";
 import { SignInData, SignUpData } from "./types/auth.types";
 import * as bcrypt from 'bcrypt';
 import { getVerifyToken, getRefreshToken, verifyToken, formatUser } from "../../helpers/helpers";
+import { ClientUser } from "../user/types/user.types";
 
 
 @Injectable()
@@ -18,17 +20,50 @@ export class AuthService {
                 name
             }
         })
-        const refreshToken = getRefreshToken(user.id, user.email);
+        return formatUser(user)
+    }
+
+    async updateRefreshToken(user: ClientUser) {
+        const refreshToken = getRefreshToken(user.id, user.email)
         await this.prisma.user.update({
             where: { id: user.id },
             data: { refreshToken }
         })
-        const accessToken = getVerifyToken(user.id, user.email);
-        return {
-            user: formatUser(user),
-            accessToken,
-            refreshToken
-        };
+        return refreshToken
+    }
+
+    async setCookieTokens(accessToken: string, refreshToken: string, res: Response) {
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            maxAge: 15 * 60 * 1000,
+            path: "/",
+        });
+        
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: "/",
+        });
+    }
+
+    async logout(res: Response) {
+        res.clearCookie("accessToken", {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            path: "/",
+        });
+        
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            path: "/",
+        });
     }
 
     async signIn({email, password}: SignInData) {
@@ -36,55 +71,33 @@ export class AuthService {
             where: { email }
         })
         if (!user) {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('Пользователь не найден');
         }
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
         if (!isPasswordValid) {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('Неверный пароль');
         }
-        const refreshToken = getRefreshToken(user.id, user.email);
-        const accessToken = getVerifyToken(user.id, user.email);
-        this.prisma.user.update({
-            where: { id: user.id },
-            data: { refreshToken }
-        })
-        return {
-            user: formatUser(user),
-            accessToken,
-            refreshToken
-        };
+        return formatUser(user)
     }
 
-    async me(headers: Headers) {
-        const accessToken = headers['accesstoken'];
-        if(!accessToken) {
-            throw new UnauthorizedException('Access token not found');
-        }
-        if (accessToken.exp < Date.now()) {
-            throw new UnauthorizedException('Access token expired');
-        }
-
-        const { id } = verifyToken(accessToken);
+    async me(userId: number) {
         const user = await this.prisma.user.findUnique({
-            where: { id }
+            where: { id: userId }
         })
         if (!user) {
             throw new UnauthorizedException('User not found');
         }
-        return formatUser(user);
+        return formatUser(user)
     }
 
-    async refresh(headers: Headers) {
-        const refreshToken = headers['refreshtoken'];
-        if(!refreshToken) {
-            throw new UnauthorizedException('Refresh token not found');
-        }
+    async refresh(refreshToken: string) {
         const { id } = verifyToken(refreshToken);
+        
         const user = await this.prisma.user.findUnique({
             where: { id }
-        })
-        if (!user) {
-            throw new UnauthorizedException('User not found');
+        })          
+        if (!user || user.refreshToken !== refreshToken) {
+            throw new UnauthorizedException();
         }
         const accessToken = getVerifyToken(user.id, user.email);
         const newRefreshToken = getRefreshToken(user.id, user.email);

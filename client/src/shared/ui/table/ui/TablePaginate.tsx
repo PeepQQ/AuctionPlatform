@@ -12,7 +12,7 @@ export const TablePaginate = ({
     const pagesCount = Math.ceil(totalCount / pageSize);
     const pagesNums = Array.from({ length: pagesCount }, (_, i) => i+1);
 
-    if (!pagesCount) return null;
+    if (pagesCount <= 1) return null;
 
     return (
         <div className={styles.paginate}>
