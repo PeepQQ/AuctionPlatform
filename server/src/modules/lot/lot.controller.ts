@@ -1,19 +1,19 @@
-import { Controller, Get, Post, Body, Headers, UnauthorizedException, NotFoundException, UseInterceptors, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseInterceptors, UseGuards } from '@nestjs/common';
 import { LotService } from './lot.service';
-import { AuthService } from '../auth/auth.service';
 import type { CreateLotData, MulterFile } from './types/lot.types';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadedFiles } from '@nestjs/common';
-import { LotState } from '@prisma/client';
-import { User } from '../auth/user.decorator';
+import { User } from '../../decorators/user.decorator';
 import type { UserPayload } from 'src/helpers/helpers';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '../auth/guards/auth.guard';
+import { isLotExists } from './guards/isLotExists.guard';
+import { Lot } from 'src/decorators/lot.decorator';
+import type { Lot as LotType } from '@prisma/client';
 
 @Controller('lots')
 export class LotController {
   constructor(
-    private readonly lotService: LotService, 
-    private readonly authService: AuthService
+    private readonly lotService: LotService,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -24,11 +24,7 @@ export class LotController {
     @Body() body: CreateLotData,
     @User() user: UserPayload,
   ) {
-    const userId = user.id;
-    if (!userId) {
-      throw new UnauthorizedException('User not found');
-    }
-    return this.lotService.createLot({ ...body, pictures }, userId);
+    return this.lotService.createLot({ ...body, pictures }, user.id);
   }
 
   @Get('getLots')
@@ -36,23 +32,12 @@ export class LotController {
     return this.lotService.getLots();
   }
 
+  @UseGuards(isLotExists)
   @Get('getLotById')
-  async getLotById(@Query('lotId') lotId: string) {
-    if (!lotId) {
-      throw new NotFoundException('Не передан lotId')
-    }
-    const lot = await this.lotService.getLotById(Number(lotId));
-    if (!lot) {
-      throw new NotFoundException('Лот не найден')
-    }
-    
-    const pictures = await this.lotService.getLotPictures(Number(lotId));
-
+  async getLotById(
+    @Lot() lot: LotType
+  ) {
+    const pictures = await this.lotService.getLotPictures(lot.id);
     return {...lot, pictures};
-  }
-
-  @Post('changeLotState')
-  async changeLotState(@Body() body: {lotId:number, state:LotState}) {
-    return this.lotService.changeLotState(body.lotId, body.state);
   }
 }

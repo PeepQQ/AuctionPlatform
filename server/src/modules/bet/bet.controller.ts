@@ -3,16 +3,12 @@ import { BetService } from "./bet.service";
 import type { MakeBetData, GetBetsData } from "./types/bet.types";
 import { AuthService } from "../auth/auth.service";
 import type { UserPayload } from "src/helpers/helpers";
-import { User } from "../auth/user.decorator";
-import { AuthGuard } from "../auth/auth.guard";
-
-
-
+import { User } from "../../decorators/user.decorator";
+import { AuthGuard } from "../auth/guards/auth.guard";
 
 @Controller('bet')
 export class BetController {
     constructor(
-        private readonly authService: AuthService,
         private readonly betService: BetService
     ) {}
 
@@ -28,7 +24,7 @@ export class BetController {
         }
         return this.betService.makeBet({
             lotId: data.lotId, 
-            userId: 1, 
+            userId: user.id, 
             username: user.name,
             summ: data.summ,
         });
@@ -47,7 +43,6 @@ export class BetController {
         @Body() data: {lotId: number},
         @User() user: UserPayload,
     ) {
-        const userId = user.id;
-        return this.betService.canMakeBet(data.lotId, 1);
+        return this.betService.canMakeBet(data.lotId, user.id);
     }
 }

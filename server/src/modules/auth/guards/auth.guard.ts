@@ -6,7 +6,7 @@ import {
   } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { verifyToken } from 'src/helpers/helpers';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
   
 @Injectable()
 export class AuthGuard implements CanActivate {

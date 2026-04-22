@@ -3,8 +3,8 @@ import type { Response } from "express";
 import { Body, Controller, Post, Get, Res, UseGuards } from "@nestjs/common";
 import type { SignInData, SignUpData } from "./types/auth.types";
 import { getVerifyToken, type UserPayload } from "src/helpers/helpers";
-import { User } from "./user.decorator";
-import { AuthGuard } from "./auth.guard";
+import { User } from "../../decorators/user.decorator";
+import { AuthGuard } from "./guards/auth.guard";
 
 
 

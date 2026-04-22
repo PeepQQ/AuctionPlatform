@@ -6,12 +6,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum LotState {
-  WAITING
-  TRADING
-  FINISHED 
-}
-
 model User {
   id           Int      @id @default(autoincrement())
   name         String   @default("Unknown")
@@ -19,7 +13,6 @@ model User {
   passwordHash String
   createdAt    DateTime @default(now())
   refreshToken String?
-
   lots         Lot[]
   bets         LotBet[]
 }
@@ -31,13 +24,12 @@ model Lot {
   price       Float
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  startAt     DateTime
   ownerId     Int
+  startAt     DateTime
   state       LotState     @default(WAITING)
-
   owner       User         @relation(fields: [ownerId], references: [id])
-  pictures    LotPicture[]
   bets        LotBet[]
+  pictures    LotPicture[]
 }
 
 model LotPicture {
@@ -48,13 +40,18 @@ model LotPicture {
 }
 
 model LotBet {
-  id       Int    @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   summ     Int
-  date     DateTime     @default(now())
+  date     DateTime @default(now())
   lotId    Int
   userId   Int
   username String
+  lot      Lot      @relation(fields: [lotId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+}
 
-  lot      Lot    @relation(fields: [lotId], references: [id])
-  user     User   @relation(fields: [userId], references: [id])
+enum LotState {
+  WAITING
+  TRADING
+  FINISHED
 }

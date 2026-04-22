@@ -17,7 +17,7 @@ export function formatUser(user: User) {
 function getJwtSecret(): string {
     const secret = process.env.JWT_SECRET;
     if (!secret) {
-        throw new Error('JWT_SECRET is not defined in environment variables');
+        throw new Error('JWT_SECRET в .env не найден');
     }
     return secret;
 }
