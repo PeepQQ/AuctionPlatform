@@ -27,21 +27,21 @@ export const MakeBet = ({
         }
     }
 
-    useEffect(() => {
-        firstCheck();
-        socket.emit('joinLot', lotId);
+    // useEffect(() => {
+    //     firstCheck();
+    //     socket.emit('joinLot', lotId);
 
-        const handler = (data: { lotId: number; isCan: boolean }) => {
-            if (Number(data.lotId) !== lotId) return;
-            setIsCanMakeBet(data.isCan);
-        };
+    //     const handler = (data: { lotId: number; isCan: boolean }) => {
+    //         if (Number(data.lotId) !== lotId) return;
+    //         setIsCanMakeBet(data.isCan);
+    //     };
 
-        socket.on('canMakeBet', handler);
+    //     socket.on('canMakeBet', handler);
 
-        return () => {
-            socket.off('canMakeBet', handler);
-        };
-    }, [lotId]);
+    //     return () => {
+    //         socket.off('canMakeBet', handler);
+    //     };
+    // }, [lotId]);
 
     if (!isCanMakeBet) return null;
 

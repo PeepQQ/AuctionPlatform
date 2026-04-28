@@ -16,11 +16,11 @@ export const LotState = ({
     initialState
 }: LotStateProps) => {
     const [currentState, setCurrentState] = useState<LotStates>(initialState);
-    const { onState } = useLotSocket(lotId);
+    const { onState } = useLotSocket(lotId.toString());
     
     useEffect(() => {
         const unsubscribe = onState(({state}) => {
-          setCurrentState(state);
+            setCurrentState(state);
         });
       
         return unsubscribe;

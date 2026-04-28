@@ -6,7 +6,6 @@ import { CreateLotActions } from "../../actions/ui/CreateLotActions"
 import styles from '../styles/createLotForm.module.scss'
 import { HeadFields } from "./HeadFields"
 import { PictureFields } from "./PictureFields"
-import { useEffect } from "react"
 
 export const CreateLotForm = () => {
     const { 
@@ -21,8 +20,6 @@ export const CreateLotForm = () => {
             price: 1,
         }
     })
-
-    useEffect(() => {console.log(errors)}, [errors])
 
     return (
         <form className={styles.createLotForm}>

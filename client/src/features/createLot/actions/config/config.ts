@@ -7,6 +7,7 @@ export const formatData = async (data: CreateLotFormValues) => {
     formData.append('name', data.name);
     formData.append('description', data.description);
     formData.append('startAt', data.startAt.toISOString());
+    formData.append('endAt', data.endAt.toISOString());
     formData.append('price', data.price.toString());
     for (const file of data.pictures ?? []) {
         formData.append('pictures', file as Blob);

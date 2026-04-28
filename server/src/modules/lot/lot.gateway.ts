@@ -39,6 +39,7 @@ export class LotGateway {
       @ConnectedSocket() client: Socket,
   ) {
       client.leave(lotId);
+      console.log('leave lot:', lotId);
   }
 
   lotPrice(lotId: string, price: number) {
@@ -54,6 +55,7 @@ export class LotGateway {
   }
 
   lotState(lotId: string, state: LotState) {
+    console.log("LOTSTATE", lotId, state);
     this.server.to(lotId).emit('lotState', {
       lotId,
       state

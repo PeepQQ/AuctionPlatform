@@ -26,6 +26,8 @@ model Lot {
   updatedAt   DateTime     @updatedAt
   ownerId     Int
   startAt     DateTime
+  endAt       DateTime
+
   state       LotState     @default(WAITING)
   owner       User         @relation(fields: [ownerId], references: [id])
   bets        LotBet[]

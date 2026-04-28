@@ -4,22 +4,22 @@ import type { Bet } from "@/entities/bet";
 import { LotStates } from "@/entities/lot";
 
 interface onBetHandlerData {
-  lotId: number;
+  lotId: string;
   bet: Bet;
   totalCount: number;
 }
 
 interface onStateHandlerData {
-    lotId: number;
-    state: LotStates
+  lotId: string;
+  state: LotStates
 }
 
 interface onPriceHandlerData {
-    lotId: number;
-    price: number;
+  lotId: string;
+  price: number;
 }
 
-export const useLotSocket = (lotId: number) => {
+export const useLotSocket = (lotId: string) => {
   const onBet = useCallback((handler: (data: onBetHandlerData) => void) => {
     const listener = (data: onBetHandlerData) => {
       if (data.lotId !== lotId) return;

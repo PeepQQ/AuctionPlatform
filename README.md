@@ -29,6 +29,7 @@ Next.js, NestJS, PostgreSQL, Prisma, ImageKit
 - JWT_SECRET=""
 - CLIENT_URL="" -> http://localhost:3000 default
 - PORT="" -> 5005 default
+- IMAGEKIT_PRIVATE_KEY="private_iNHMXcB71F16WnlgHXURwFagSS8="
 
 ## Фронт - client
 cd client -> npm i -> npm run dev

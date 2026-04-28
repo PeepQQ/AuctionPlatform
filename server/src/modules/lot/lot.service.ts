@@ -24,7 +24,8 @@ export class LotService {
         description: data.description,
         price: Number(data.price),
         ownerId: userId,
-        startAt: new Date(data.startAt)
+        startAt: new Date(data.startAt),
+        endAt: new Date(data.endAt)
       },
     });
 
@@ -68,8 +69,15 @@ export class LotService {
       }
     })
 
-    if(lot?.state == LotState.WAITING && new Date(lot.startAt) < new Date()) {
+    if(!lot) throw new BadRequestException('Лот не найден');
+
+    const now = new Date();
+
+    if(lot?.state == LotState.WAITING && now >= new Date(lot.startAt)) {
       lot = await this.changeLotState(lotId, LotState.TRADING);
+    }
+    if(lot?.state == LotState.TRADING && now >= new Date(lot.endAt)) {
+      lot = await this.changeLotState(lotId, LotState.FINISHED);
     }
 
     return lot;

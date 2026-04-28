@@ -10,6 +10,7 @@ export interface Lot {
     createdAt: Date;
     updatedAt: Date;
     startAt: Date;
+    endAt: Date;
     pictures: LotPicture[];
     ownerId: number;
     state: LotStates;
@@ -27,9 +28,9 @@ export interface CreateLotData {
 }
 
 export enum LotStates {
-    WAITING,
-    TRADING,
-    FINISHED
+    WAITING = 'WAITING',
+    TRADING = 'TRADING',
+    FINISHED = 'FINISHED'
 }
 
 export const LotStateLabels: Record<string, string> = {

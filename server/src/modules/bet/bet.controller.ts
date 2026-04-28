@@ -1,7 +1,6 @@
-import { Controller, Post, Body, Headers, UnauthorizedException, Get, Query, UseGuards } from "@nestjs/common";
+import { Controller, Post, Body, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { BetService } from "./bet.service";
 import type { MakeBetData, GetBetsData } from "./types/bet.types";
-import { AuthService } from "../auth/auth.service";
 import type { UserPayload } from "src/helpers/helpers";
 import { User } from "../../decorators/user.decorator";
 import { AuthGuard } from "../auth/guards/auth.guard";

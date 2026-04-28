@@ -40,4 +40,12 @@ export class LotController {
     const pictures = await this.lotService.getLotPictures(lot.id);
     return {...lot, pictures};
   }
+
+  @UseGuards(isLotExists)
+  @Get('syncLot')
+  async syncLot(
+    @Lot() lot: LotType
+  ) {
+    return lot;
+  }
 }

@@ -2,7 +2,7 @@
 import { Lot } from "@/entities/lot"
 import styles from "../../styles/lotPageSidePanel.module.scss";
 import { LotState } from "@/features/lot/ui/LotState";
-
+import { LotTimer } from "@/features/lot/ui/LotTimer";
 
 
 export const LotInfo = ({
@@ -20,8 +20,10 @@ export const LotInfo = ({
                 />
             </div>
             <div className={styles.lotInfoRow}>
-                <h4 className={styles.lotInfoRowName}>Дата начала:</h4>
-                <span className={styles.lotInfoRowValue}>{new Date(lot.startAt).toLocaleString('ru-RU')}</span>
+                <LotTimer lot={lot} />
+            </div>
+            <div className={styles.lotInfoRow}>
+                
             </div>
         </div>
     )

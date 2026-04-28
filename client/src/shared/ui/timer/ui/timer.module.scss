@@ -1,0 +1,20 @@
+
+
+.timerWrapper {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 5px;
+}
+
+.timeGroup {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--box-bg);
+    backdrop-filter: var(--box-backgrop-filter);
+    box-shadow: var(--box-box-shadow);
+    text-align: center;
+    border-radius: 2px;
+    font-size: 16px;
+    padding: 5px;
+}

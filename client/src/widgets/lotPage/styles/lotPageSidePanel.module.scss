@@ -28,6 +28,12 @@
     gap: 12px;
 }
 
+.lotInfoRow {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .makeBetWrapper {
     margin-top: auto;
 }

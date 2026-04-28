@@ -9,7 +9,7 @@ import { LotService } from '../lot.service';
 import { LotState } from '@prisma/client';
   
 @Injectable()
-export class isLotTrading implements CanActivate {
+export class IsLotTrading implements CanActivate {
     constructor(private lotService: LotService) {}
   
     async canActivate(context: ExecutionContext): Promise<boolean> {

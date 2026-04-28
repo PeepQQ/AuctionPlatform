@@ -15,7 +15,7 @@ import {
 
 
 export const BetsListTable = ({ lotId }: { lotId: number }) => {
-    const { onBet } = useLotSocket(lotId);
+    const { onBet } = useLotSocket(lotId.toString());
     const [isNewBet, setIsNewBet] = useState(false);
     const [paginateData, setPaginateData] = useState({
         lotId: lotId,

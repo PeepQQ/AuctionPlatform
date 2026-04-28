@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import styles from '../styles/createLotForm.module.scss';
+import type { selectOption } from '@/shared/ui/form';
 
 export const createLotFormSchema = yup.object({
     name: yup.string().required('Название является обязательным'),
@@ -22,7 +23,31 @@ export const createLotFormSchema = yup.object({
     startAt: yup.date()
                 .typeError("Заполните дату начала торгов")
                 .required("Заполните дату начала торгов")
-                .min(new Date(), "Дата должна быть в будущем")
+                .test(
+                    'is-in-the-future',
+                    'Дата должна быть в будущем',
+                    (value) => {
+                        if(!value) return false;
+
+                        return value > new Date();
+                    }
+                ),
+    endAt: yup.date()
+                .typeError("Заполните дату окончания торгов")
+                .required("Заполните дату окончания торгов")
+                .test(
+                    "is-after-now-plus-1h",
+                    "Минимальная длительность после даты начала торгов - 1 минута",
+                    function (value) {
+                        const { startAt }: {startAt: Date} = this.parent;
+                        if (!value || !startAt) return false;
+
+                        const minDate = new Date(startAt);
+                        minDate.setMinutes(startAt.getMinutes() + 1);
+                        
+                        return value >= minDate;
+                    }
+                )
 });
 
 export type CreateLotFormValues = yup.InferType<typeof createLotFormSchema>;
@@ -61,6 +86,13 @@ export const headFields: CreateLotFieldConfig[] = [
         field: 'input',
         type: 'datetime-local',
         className: styles.createLotFormInput
+    },
+    {
+        name: 'endAt',
+        label: 'Окончание торгов',
+        field: 'input',
+        type: 'datetime-local',
+        className: styles.createLotFormInput,
     },
     {
         name: 'description',

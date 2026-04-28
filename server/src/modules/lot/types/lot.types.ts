@@ -14,5 +14,6 @@ export interface CreateLotData {
   description: string;
   price: number;
   pictures: Array<MulterFile>;
-  startAt: Date
+  startAt: Date;
+  endAt: Date;
 }

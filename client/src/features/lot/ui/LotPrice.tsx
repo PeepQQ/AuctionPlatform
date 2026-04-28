@@ -15,7 +15,7 @@ export const LotPrice = ({
     lotPrice
 }: LotPriceProps) => {
     const [currentLotPrice, setCurrentLotPice] = useState(lotPrice);
-    const { onPrice } = useLotSocket(lotId);
+    const { onPrice } = useLotSocket(lotId.toString());
 
     useEffect(() => {
         const unsubscribe = onPrice(({price}) => {
